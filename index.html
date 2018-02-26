@@ -1,23 +1,36 @@
----
-layout: default
----
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+	  
+	  function drawTable() {
+		var queryString = encodeURIComponent('SELECT B,C,D,E,F,G,H,I,J');
+				
+		var rawData = 'https://docs.google.com/spreadsheets/d/1A1nIJUTYk-RLBl7ZhqpXqQOpvH5GvIQaOoiQ6tqHjy8/gviz/tq?sheet=ShqipronG&headers=1&tq='
+		
+		var query = new google.visualization.Query(
+          rawData + queryString);
+      query.send(handleSampleDataQueryResponse);
+	  
+	  function handleSampleDataQueryResponse(response) {
+      if (response.isError()) {
+        alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+        return;
+      }
 
-<div class="home">
+	  var data = response.getDataTable();
+	  var table = new google.visualization.Table(document.getElementById('table_div'));
+	  table.draw(data, { alternatingRowStyle:false, frozenColumns:2, width:'100%', allowHtml: true});
+    }
+    }
 
-  <h1 class="page-heading">Posts</h1>
-
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-
-</div>
+	  
+    </script>
+  </head>
+  <body>
+	<h1>Informatics Notes - Shqipron</h1>
+    <div id="table_div" style="width:100%;"></div>
+  </body>
+</html>
